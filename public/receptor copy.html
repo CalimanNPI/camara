@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <img id="video2" alt="">
+
+    <div class="row row-cols-1 row-cols-md-2" id="card">
+    </div>
+
+    <script src="/socket.io/socket.io.js" charset="UTF-8"></script>
+    <script>
+        const socket = io();
+
+        socket.on('stream', function (data) {
+
+            if (data.imagen) {
+                document.querySelector("#video2").src = data.imagen;
+                console.log("hay info")
+            }
+        });
+    </script>
+</body>
+
+</html>

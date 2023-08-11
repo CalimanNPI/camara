@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <video class="embed-responsive-item" src="" id="video"></video>
+    <canvas id="preview" class="invisible"></canvas>
+
+    <script src="socket.io/socket.io.js" charset="UTF-8"></script>
+    <script>
+
+        var body;
+        var address = window.location.protocol + '//' + window.location.host;
+
+        var details = {
+            resource: (window.location.pathname.split('/').slice(0, -1).join('/') + '/socket.io').substring(1)
+        };
+
+        const socket = io.connect(address, details);
+
+
+        //const socket = io();
+
+        var ticket = ''
+        var isConnected = false
+        var mediaRecorder;
+        var recordedChunks = [];
+
+        var count = 1;
+
+
+        navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then(function (stream) {
+
+            var canvas = document.getElementById('preview');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+
+            context.width = 700;
+            context.height = 900;
+            context.width = canvas.width;
+            context.height = canvas.height;
+
+            video.srcObject = stream; //window.URL.createObjectURL(stream); 
+
+            socket.on('disconnected', function (data) {
+                if (data.disconnect)
+                    isConnected = false
+            });
+
+            socket.on('connected', function (data) {
+                if (data.connected)
+                    isConnected = !isConnected
+            });
+
+            socket.on('ticket', function (data) {
+                if (data.ticket)
+                    ticket = data.ticket
+            });
+
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = function (event) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = function () {
+                var blob = new Blob(recordedChunks, { type: 'video/webm' });
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = ticket + '.mp4';
+                a.textContent = 'Download';
+                document.body.appendChild(a);
+                a.click()
+                document.body.removeChild(a)
+            };
+
+            setInterval(function () {
+                context.drawImage(video, 0, 0, context.width, context.height);
+                socket.emit('stream', {
+                    imagen: canvas.toDataURL('img/webp'),
+                    id: socket.id
+                });
+                if (ticket && isConnected) {
+                    count++;
+                    if (count == 2) {
+                        console.log('grabando', count)
+                        recordedChunks = [];
+                        mediaRecorder.start();
+                    }
+                } else {
+                    if (count > 2) {
+                        count = 1;
+                        console.log('ya no esta grabando', count)
+                        mediaRecorder.stop();
+                    }
+                }
+            }, 0);
+
+            video.onloadedmetadata = function (ev) { video.play() }
+
+        }).catch(function (err) { console.log(err) });
+    </script>
+</body>
+
+</html>

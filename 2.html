@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <img id="video2" alt="">
+
+    <div class="row row-cols-1 row-cols-md-2" id="card">
+    </div>
+
+    <script src="/socket.io/socket.io.js" charset="UTF-8"></script>
+    <script>
+        var body;
+        var address = window.location.protocol + '//' + window.location.host;
+
+        var details = {
+            resource: (window.location.pathname.split('/').slice(0, -1).join('/') + '/socket.io').substring(1)
+        };
+
+        const socket = io.connect(address, details);
+
+        //const socket = io();
+
+        socket.on('stream', function (data) {
+            if (data.imagen) {
+                document.querySelector("#video2").src = data.imagen;
+            }
+        });
+
+        socket.emit('ticket', {
+            ticket: getParameterByName("ticket", window.location.href),
+            id: socket.id
+        });
+
+        function getParameterByName(name, url) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+</body>
+
+</html>
