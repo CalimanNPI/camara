@@ -1,39 +1,49 @@
-const express = require("express");
-const SocketIO = require("socket.io");
-const path = require("path");
 const http = require("http");
+const SocketIO = require("socket.io");
+const express = require("express");
 const app = express();
-const fs = require("fs");
 let server = http.createServer(app);
 
 // setting
 const port = process.env.PORT || 3000;
 
-//sockts 
-module.exports.io = SocketIO(server);
-require("./sockets");
+//sockts
+//module.exports.io = SocketIO(server);
+const io = SocketIO(server);
+//require("./sockets");
 
-function handler(req, res) {
-  fs.readFile(
-    path.resolve(__dirname, "index-socketio.html"),
-    function (err, data) {
-      if (err) {
-        res.writeHead(500);
-        return res.end("Error loading index-socketio.html");
-      }
+app.get("/", (red, res) => {
+  res.sendfile(__dirname + "/1.html");
+});
 
-      res.writeHead(200);
-      res.end(data);
-    }
-  );
-}
+app.get("/web", (red, res) => {
+  res.sendfile(__dirname + "/2.html");
+});
 
 //static files
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "")));
+//app.use(express.static(path.join(__dirname, "")));
+//app.use(express.static(path.join(__dirname, "public")));
 
 //start he server
 server.listen(port, (err) => {
   if (err) throw new Error(err);
-  console.log("server on port", port);
+  console.log("server on port", `http:localhost:${port}`);
+});
+
+io.on("connection", (socket) => {
+  console.log("connected", socket.id);
+  socket.broadcast.emit("connected", { connected: true });
+
+  socket.on("stream", (data) => {
+    socket.broadcast.emit("stream", data);
+  });
+
+  socket.on("ticket", (data) => {
+    socket.broadcast.emit("ticket", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("disconnected");
+    socket.broadcast.emit("disconnected", { disconnect: true });
+  });
 });

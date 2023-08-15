@@ -1,11 +1,11 @@
 const { io } = require("./index");
 
 //io.configure(function () {
-//  io.set("transports", ["websocket"]);
-//
-//  if (process.env.IISNODE_VERSION) {
-//    io.set("resource", "/dante/socket.io");
-//  }
+//  //io.set("transports", ["websocket"]);
+////
+//  //if (process.env.IISNODE_VERSION) {
+//  //  io.set("resource", "/dante/socket.io");
+//  //}
 //});
 
 io.on("connection", (socket) => {

@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Web</title>
 </head>
 
 <body>
 
-    <video class="embed-responsive-item" src="" id="video"></video>
-    <canvas id="preview" class="invisible"></canvas>
+    <video src="" id="video" style="display: none;"></video>
+    <canvas id="preview" style="display: none;"></canvas>
 
     <script src="socket.io/socket.io.js" charset="UTF-8"></script>
     <script>
@@ -22,10 +22,7 @@
             resource: (window.location.pathname.split('/').slice(0, -1).join('/') + '/socket.io').substring(1)
         };
 
-        const socket = io.connect(address, details);
-
-
-        //const socket = io();
+        const socket = io();
 
         var ticket = ''
         var isConnected = false
@@ -89,17 +86,16 @@
                     imagen: canvas.toDataURL('img/webp'),
                     id: socket.id
                 });
+
                 if (ticket && isConnected) {
                     count++;
                     if (count == 2) {
-                        console.log('grabando', count)
                         recordedChunks = [];
                         mediaRecorder.start();
                     }
                 } else {
                     if (count > 2) {
                         count = 1;
-                        console.log('ya no esta grabando', count)
                         mediaRecorder.stop();
                     }
                 }
