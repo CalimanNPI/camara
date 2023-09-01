@@ -28,14 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, "")));
 //app.use(express.static(path.join(__dirname, "public")));
 
-//start he server
-server.listen(port, (err) => {
-  if (err) throw new Error(err);
-  console.log("server on port", `http:localhost:${port}`);
-});
-
 io.on("connection", (socket) => {
-  console.log("connected", socket.id);
+  //console.log("connected", socket.id);
   socket.broadcast.emit("connected", { connected: true });
 
   socket.on("stream", (data) => {
@@ -47,7 +41,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("disconnected");
+    //console.log("disconnected");
     socket.broadcast.emit("disconnected", { disconnect: true });
   });
+});
+
+//start he server
+server.listen(port, (err) => {
+  if (err) throw new Error(err);
+  //console.log("server on port", `http:localhost:${port}`);
 });
