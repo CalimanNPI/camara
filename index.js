@@ -13,13 +13,16 @@ const port = process.env.PORT || 3000;
 const io = SocketIO(server);
 //require("./sockets");
 
-app.get("/", (red, res) => {
-  res.sendfile(path.join(__dirname, "1.html"));
-});
+//static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("/web", (red, res) => {
-  res.sendfile(path.join(__dirname, "2.html"));
-});
+//app.get("/", (red, res) => {
+//  res.sendfile(path.join(__dirname, "1.html"));
+//});
+//
+//app.get("/web", (red, res) => {
+//  res.sendfile(path.join(__dirname, "2.html"));
+//});
 
 //static files
 //app.use(express.static(path.join(__dirname, "")));
