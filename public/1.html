@@ -16,7 +16,9 @@
 
     <video src="" id="video"></video>
     <canvas id="preview"></canvas>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="socket.io/socket.io.js" charset="UTF-8"></script>
     <script>
 
@@ -83,6 +85,9 @@
                 document.body.appendChild(a);
                 a.click()
                 document.body.removeChild(a)
+
+
+                subirVideo(blob);
             };
 
             setInterval(function () {
@@ -107,6 +112,25 @@
             }, 0);
 
             video.onloadedmetadata = function (ev) { video.play() }
+
+            function subirVideo(blob) {
+                var form_data = new FormData();
+                form_data.append('video', blob);
+
+                var phpUrl = "https://cdcac.com/web/video/";
+
+                fetch(RUTA_SERVIDOR, {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then(respuestaRaw => respuestaRaw.text()) // Decodificar como texto
+                    .then(respuestaComoTexto => {
+                        // Aquí haz algo con la respuesta ;)
+                        console.log("La respuesta: ", respuestaComoTexto);
+                        // Abrir el archivo, es opcional y solo lo pongo como demostración
+                        $duracion.innerHTML = `<strong>Vídeo subido correctamente.</strong>&nbsp; <a target="_blank" href="${respuestaComoTexto}">Abrir</a>`
+                    })
+            }
 
         }).catch(function (err) { console.log(err) });
     </script>
