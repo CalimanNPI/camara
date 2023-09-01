@@ -3,6 +3,7 @@ const SocketIO = require("socket.io");
 const express = require("express");
 const app = express();
 let server = http.createServer(app);
+const path = require("path");
 
 // setting
 const port = process.env.PORT || 3000;
@@ -13,11 +14,11 @@ const io = SocketIO(server);
 //require("./sockets");
 
 app.get("/", (red, res) => {
-  res.sendfile(__dirname + "/1.html");
+  res.sendfile(path.join(__dirname, "1.html"));
 });
 
 app.get("/web", (red, res) => {
-  res.sendfile(__dirname + "/2.html");
+  res.sendfile(path.join(__dirname, "2.html"));
 });
 
 //static files
