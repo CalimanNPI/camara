@@ -11,13 +11,14 @@
 
     <img id="video2" alt="">
 
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+    <!--<script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
         integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>-->
     <!-- <script src="/socket.io/socket.io.js" charset="UTF-8"></script>-->
+    <script src="socket.io/socket.io.js" charset="UTF-8"></script>
     <script>
 
-        const socket = io("http://localhost:3000");
+        ///const socket = io("http://localhost:3000");
 
         var body;
         var address = window.location.protocol + '//' + window.location.host;
@@ -28,7 +29,7 @@
 
         //const socket = io.connect(address, details);
 
-        //const socket = io();
+        const socket = io();
 
         socket.on('stream', function (data) {
             if (data.imagen) {
