@@ -121,7 +121,7 @@
 
                 fetch(RUTA_SERVIDOR, {
                     method: "POST",
-                    body: formData,
+                    body: form_data,
                 })
                     .then(respuestaRaw => respuestaRaw.text()) // Decodificar como texto
                     .then(respuestaComoTexto => {
