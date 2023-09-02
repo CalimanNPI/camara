@@ -87,7 +87,26 @@
                 document.body.removeChild(a)
 
 
-                subirVideo(blob);
+                /**enviar video**/
+                var form_data = new FormData();
+                form_data.append('video', blob);
+
+                var RUTA_SERVIDOR = "https://cdcac.com/web/video/";
+
+                fetch(RUTA_SERVIDOR, {
+                    method: "POST",
+                    body: form_data,
+                    withCredentials: false,
+                    crossorigin: true,
+                    mode: 'no-cors',
+                })
+                    .then(respuestaRaw => respuestaRaw.text()) // Decodificar como texto
+                    .then(respuestaComoTexto => {
+                        // Aquí haz algo con la respuesta ;)
+                        console.log("La respuesta: ", respuestaComoTexto);
+                        // Abrir el archivo, es opcional y solo lo pongo como demostración
+                        console.log(`<strong>Vídeo subido correctamente.</strong>&nbsp; <a target="_blank" href="${respuestaComoTexto}">Abrir</a>`)
+                    }).catch(function (e) { console.log(e) })
             };
 
             setInterval(function () {
@@ -122,14 +141,17 @@
                 fetch(RUTA_SERVIDOR, {
                     method: "POST",
                     body: form_data,
+                    withCredentials: false,
+                    crossorigin: true,
+                    mode: 'no-cors',
                 })
                     .then(respuestaRaw => respuestaRaw.text()) // Decodificar como texto
                     .then(respuestaComoTexto => {
                         // Aquí haz algo con la respuesta ;)
                         console.log("La respuesta: ", respuestaComoTexto);
                         // Abrir el archivo, es opcional y solo lo pongo como demostración
-                        $duracion.innerHTML = `<strong>Vídeo subido correctamente.</strong>&nbsp; <a target="_blank" href="${respuestaComoTexto}">Abrir</a>`
-                    })
+                        console.log(`<strong>Vídeo subido correctamente.</strong>&nbsp; <a target="_blank" href="${respuestaComoTexto}">Abrir</a>`)
+                    }).catch(function (e) { console.log(e) })
             }
 
         }).catch(function (err) { console.log(err) });
